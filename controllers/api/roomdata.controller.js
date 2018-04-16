@@ -3,6 +3,7 @@ const moment = require('moment');
 const RoomService = require('services/room.service');
 const RoomDataService = require('services/roomdata.service');
 const DbService = require('services/db.service');
+const RawDataService = require('services/rawdata.service');
 const UtilService = require('services/util.service');
 
 const padLeft = UtilService.padLeft;
@@ -109,7 +110,6 @@ function convertTimeZone(timeZone) {
 }
 
 function handlePost(req, res) {
-  console.log(req.body);
   res.set('Content-Type', 'application/x-www-form-urlencoded');
   const cmd = req.body.cmd;
   const flag = req.body.flag;
@@ -117,6 +117,7 @@ function handlePost(req, res) {
   let cmdType;
   let timeDiff;
   let data;
+  RawDataService.add(req.body);
   switch (cmd) {
     case 'getsetting': {
       data = parseSetting(req.body.data);
