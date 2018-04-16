@@ -4,7 +4,9 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const config = require('config.json');
+const mongoExpressConfig = require('./mongo_express_config');
 const path = require('path');
+const mongoExpress = require('mongo-express/lib/middleware');
 const DbService = require('services/db.service');
 
 const app = express();
@@ -28,6 +30,7 @@ app.use(unless('/api/roomdata', session({
 })));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/public/scripts', express.static(path.join(__dirname, 'node_modules')));
+app.use('/mongo_express', mongoExpress(mongoExpressConfig));
 // use JWT auth to secure the api
 // app.use('/api', expressJwt({ secret: config.secret }).unless({
 //   path: ['/api/users/authenticate', '/api/users/register']
