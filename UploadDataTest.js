@@ -60,6 +60,7 @@ req.on('error', (e) => {
 req.write(postData);
 req.end();
 
+
 function generateData(inNum, outNum) {
   const date = new Date(Date.now() + timeDiff);
   const year = padLeft((date.getYear() - 100).toString(16)).toUpperCase();
