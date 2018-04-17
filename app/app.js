@@ -98,7 +98,6 @@ function config($stateProvider, $urlRouterProvider) {
 
 function run($http, $rootScope, $window) {
   // add JWT token as default auth header
-  console.log('Run function run');
   $http.defaults.headers.common.Authorization = `Bearer ${$window.jwtToken}`;
   // update active tab on state change
   $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
@@ -114,8 +113,6 @@ $(() => {
   console.log('Manual function run');
   $.get('/app/user', (user) => {
     window.user = user;
-    console.log('window.user is ');
-    console.log(user);
     $('#userName').html(user.firstName);
   });
   $.get('/app/token', (token) => {

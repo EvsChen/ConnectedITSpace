@@ -39,8 +39,6 @@ function Controller(
       RoomService.GetRoomList(vm.user.sub).then((roomList) => {
         $scope.roomList = roomList;
         roomList.forEach((ele, ind) => {
-          console.log('Room list is');
-          console.log(ele);
           RoomDataService.UpdateAllNum(ele._id)
             .then(({ totalNum }) => {
               // TODO: the update of total num should be finished at real time

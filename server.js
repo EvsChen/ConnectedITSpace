@@ -60,10 +60,6 @@ app.get('/', (req, res) => {
   res.redirect('/app');
   AppInitialize();
 });
-app.post('/', (req, res) => {
-  console.log(req.body);
-  return res.send('received post');
-});
 // start server
 if (process.env.PORT) {
   const server = app.listen(process.env.PORT, () => {
