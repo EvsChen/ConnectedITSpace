@@ -30,15 +30,24 @@ function Controller(
     return `${year}/${month}/${calDate} ${weekday}`;
   };
   $scope.exportDate = {
-    start: moment('2018-04-01'),
-    end: moment('2018-04-07')
+    start: moment().subtract(7,'days'),
+    end: moment()
   };
   $scope.exportToCSV = function () {
     function convertToHours(start, end, list) {
       const result = [];
+      let oldDay = 0;
       while (start.diff(end) < 0) {
         start.add(1, 'h');
-        if (start.hour() > 8 && start.hour() < 18) {
+        const d = start.dayOfYear();
+        if (start.hour() >= 8 && start.hour() < 18) {
+          if (d !== oldDay) {
+            oldDay = d;
+            result.push({
+              Date: start.format('YYYY-MM-DD'),
+              Number: []
+            });
+          }
           let In = 0;
           let Out = 0;
           const tStart = start.valueOf();
@@ -53,35 +62,39 @@ function Controller(
               Out += ele.Out;
             });
           }
-          result.push({
-            Time: start.format('YYYYMMDD,HH:mm'),
-            In,
-            Out
-          });
+          result[result.length - 1].Number.push(In);
+          result[result.length - 1].Number.push(Out);          
         }
       }
       return result;
     }
-    if ($scope.exportDate) {
-      const { start, end } = $scope.exportDate;
-      RoomDataService.GetByTimeRange(roomId, start.valueOf(), end.valueOf())
-        .then((dataList) => {
-          if (!dataList.length) { return; }
-          let csvContent = 'data:text/csv;charset=utf-8,';
-          csvContent += 'Date,Time,In,Out\r\n';
-          const dataListInHour = convertToHours(start, end, dataList);
-          dataListInHour.forEach((ele) => {
-            csvContent += `${ele.Time},${ele.In},${ele.Out} \r\n`;
-          });
-          const uri = encodeURI(csvContent);
-          const link = document.createElement('a');
-          link.setAttribute('href', uri);
-          link.setAttribute('download', 'DataExport.csv');
-          document.body.appendChild(link); // Required for FF
-          link.click();
-          document.body.removeChild(link);
+    const { start, end } = $scope.exportDate;
+    RoomDataService.GetByTimeRange(roomId, start.valueOf(), end.valueOf())
+      .then((dataList) => {
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        csvContent += 'Date,';
+        for (let i = 8; i < 18; i++) {
+          csvContent += `${i}-${i + 1} In,`;
+          csvContent += `${i}-${i + 1} Out,`;
+        }
+        csvContent += '\r\n';
+        const dataListInHour = convertToHours(start, end, dataList);
+        dataListInHour.forEach((ele) => {
+          csvContent += `${ele.Date},`;
+          csvContent += ele.Number.join(',');
+          csvContent += '\r\n';
         });
-    }
+        const uri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', uri);
+        link.setAttribute('download', 'DataExport.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   $scope.barPlotDate = moment().hour(0).minute(0).second(0)
     .millisecond(0);
@@ -93,7 +106,7 @@ function Controller(
       locale: {
         format: 'YYYY-MM-DD'
       },
-      startDate: $scope.exportDate.start.format('YYYY-MM-DD'),
+      startDate: moment().format('YYYY-MM-DD'),
       singleDatePicker: true,
       singleClasses: 'picker_3'
     }, (start) => {
@@ -232,7 +245,6 @@ function Controller(
         })
         .catch((err) => {
           FlashService.Error(`${err.name}:${err.message} ${err.stack}`);
-          console.error(err);
           $log.log(err);
         });
       data.push({

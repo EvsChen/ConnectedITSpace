@@ -50,11 +50,9 @@ function authenticate(username, password) {
 }
 
 function getById(_id) {
-  var deferred = Q.defer();
-
-  User.findById(_id, function (err, user) {
+  const deferred = Q.defer();
+  User.findById(_id, (err, user) => {
     if (err) deferred.reject(err.name + ': ' + err.message);
-
     if (user) {
       // return user (without hashed password)
       deferred.resolve(_.omit(user, 'hash'));
@@ -68,10 +66,9 @@ function getById(_id) {
 }
 
 function getAll() {
-  var deferred = Q.defer();
-  User.find({}, function (err, userList) {
+  const deferred = Q.defer();
+  User.find({}, (err, userList) => {
     if (err) deferred.reject(err.name + ': ' + err.message);
-
     if (userList) {
       deferred.resolve(userList);
     } else {
@@ -79,18 +76,15 @@ function getAll() {
       deferred.resolve();
     }
   });
-
   return deferred.promise;
 }
 
 function create(userParam) {
-  var deferred = Q.defer();
-  console.log(userParam);
+  const deferred = Q.defer();
   // validation
-
   User.find({
     username: userParam.username
-  }, function (err, userList) {
+  }, (err, userList) => {
     if (err) deferred.reject(err.name + ': ' + err.message);
     if (userList.length > 0) {
       // username already exists
@@ -102,10 +96,10 @@ function create(userParam) {
 
   function createUser() {
     // set user object to userParam without the cleartext password
-    var user = new User(_.omit(userParam, 'password'));
+    const user = new User(_.omit(userParam, 'password'));
     // add hashed password to user object
     user.hash = bcrypt.hashSync(userParam.password, 10);
-    user.save(function (err, user) {
+    user.save((err) => {
       if (err) deferred.reject(err.name + ': ' + err.message);
       deferred.resolve();
     });
@@ -115,20 +109,18 @@ function create(userParam) {
 }
 
 function update(_id, userParam) {
-  var deferred = Q.defer();
-
+  const deferred = Q.defer();
   // validation
-  User.findById(_id, function (err, user) {
+  User.findById(_id, (err, user) => {
     if (err) deferred.reject(err.name + ': ' + err.message);
-
     if (user.username !== userParam.username) {
       // username has changed so check if the new username is already taken
-      User.findOne({
+      User.findOne(
+        {
           username: userParam.username
         },
-        function (err, user) {
+        (err) => {
           if (err) deferred.reject(err.name + ': ' + err.message);
-
           if (user) {
             // username already exists
             deferred.reject('Username "' + req.body.username + '" is already taken')
@@ -143,25 +135,23 @@ function update(_id, userParam) {
 
   function updateUser() {
     // fields to update
-    var set = {
+    const set = {
       firstName: userParam.firstName,
       lastName: userParam.lastName,
       username: userParam.username,
     };
-
     // update password if it was entered
     if (userParam.password) {
       set.hash = bcrypt.hashSync(userParam.password, 10);
     }
-
-    User.update({
+    User.update(
+      {
         _id: mongo.helper.toObjectID(_id)
       }, {
         $set: set
       },
-      function (err, doc) {
+      (err, doc) => {
         if (err) deferred.reject(err.name + ': ' + err.message);
-
         deferred.resolve();
       });
   }
@@ -170,12 +160,11 @@ function update(_id, userParam) {
 }
 
 function _delete(_id) {
-  var deferred = Q.defer();
-
+  const deferred = Q.defer();
   User.remove({
       _id: _id
     },
-    function (err) {
+    (err) => {
       if (err) deferred.reject(err.name + ': ' + err.message);
       deferred.resolve();
     });

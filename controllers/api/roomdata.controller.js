@@ -65,7 +65,11 @@ function getAllById(req, res) {
     RoomDataService.getAllById(_RoomId)
       .then((roomdataList) => {
         if (roomdataList) {
-          res.send(roomdataList);
+          const filtered = roomdataList.filter((ele, ind, arr) => {
+            if (ind === 0) { return true; }
+            return (ele.Time.getTime() - arr[ind - 1].Time.getTime()) !== 0;
+          });
+          res.send(filtered);
         } else {
           res.sendStatus(404);
         }
@@ -86,7 +90,11 @@ function getByTimeRange(req, res) {
       )
         .then((roomdataList) => {
           if (roomdataList) {
-            res.send(roomdataList);
+            const filtered = roomdataList.filter((ele, ind, arr) => {
+              if (ind === 0) { return true; }
+              return (ele.Time.getTime() - arr[ind - 1].Time.getTime()) !== 0;              
+            });
+            res.send(filtered);
           } else {
             res.sendStatus(404);
           }
