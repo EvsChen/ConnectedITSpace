@@ -118,10 +118,11 @@ function UpdateAvg(_id) {
   return deferred.promise;
 }
 
+// The total number represents all the people entering the room this month
 function UpdateTotal(_id) {
   const deferred = Q.defer();
   let totalNum = 0;
-  getAllById(_id)
+  getByTimeRange(_id, moment().startOf('month').valueOf(), moment().valueOf())
     .then((dataList) => {
       dataList.forEach((element) => {
         totalNum += element.In;
