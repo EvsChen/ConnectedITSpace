@@ -5,7 +5,7 @@ const moment = require('moment');
 
 const timeDiff = 8 * 60 * 60 * 1000;
 // const hostname = 'localhost';
-const hostname = 'https://cis.apps.sg1.bosch-iot-cloud.com';
+const hostname = 'https://connectedit.apps.sg1.bosch-iot-cloud.com';
 // const SN = 'AAAAAAAA';
 const SN = 'FB8A8E16';
 // const SN = 'JFKD1101';
