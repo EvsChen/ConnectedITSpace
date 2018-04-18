@@ -128,7 +128,12 @@ function handlePost(req, res) {
   RawDataService.add(req.body);
   switch (cmd) {
     case 'getsetting': {
-      data = parseSetting(req.body.data);
+      if (typeof req.body.data === 'string') {
+        data = parseSetting(req.body.data);
+      }
+      else {
+        data = parseSetting(req.body.data[0]);
+      }
       const SN = data.SN;
       RoomService.GetRoomBySN(SN)
         .then((room) => {
