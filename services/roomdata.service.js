@@ -76,7 +76,7 @@ function UpdateCur(_id) {
       const endTime = zeroTime.clone()
         .add(parseInt(closeTime.substr(0, 2), 10), 'h')
         .add(parseInt(closeTime.substr(2, 2), 10), 'm');
-      let curNum = 0;        
+      let curNum = 0;
       if (moment().isBetween(startTime, endTime)) {
         getByTimeRange(_id, startTime.valueOf(), moment().valueOf())
           .then((dataList) => {

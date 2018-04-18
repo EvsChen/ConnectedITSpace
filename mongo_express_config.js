@@ -1,5 +1,3 @@
-'use strict';
-
 const config = require('config.json');
 
 var mongo;
@@ -7,7 +5,9 @@ var mongo;
 // Accesing Bluemix variable to get MongoDB info
 if (process.env.VCAP_SERVICES) {
   const vcapServices = JSON.parse(process.env.VCAP_SERVICES);
-  mongo.connectionString = vcapServices['MongoDB-Service'][0].credentials.uri;
+  mongo = {
+    connectionString: 'mongodb://029e3c24-8e56-4ed7-a078-d0951d4f0d33:Aa0WKnc8TQ15LHkuxHleQohld@sgpcvm2u0214.internal-mongodb.sg1.bosch-iot-cloud.com:30000,sgpcvm2u0215.internal-mongodb.sg1.bosch-iot-cloud.com:30000,sgpcvm2u0216.internal-mongodb.sg1.bosch-iot-cloud.com:30000/56c0d150-cef2-4439-8723-9de1e379026f?replicaSet=0002&w=majority&readPreference=primaryPreferred&ssl=true&sslInvalidHostNameAllowed=true'
+  };
 } else {
   mongo = {
     // setting the connection string will only give access to that database
