@@ -2,9 +2,9 @@ require('rootpath')();
 const UtilService = require('services/util.service');
 const http = require('http');
 
-const timeDiff = 8 * 60 * 60 * 1000;
-// const hostname = 'localhost';
-const hostname = 'https://connectedit.apps.sg1.bosch-iot-cloud.com';
+const timeDiff = - 8 * 60 * 60 * 1000;
+const hostname = 'localhost';
+// const hostname = 'https://connectedit.apps.sg1.bosch-iot-cloud.com';
 // const SN = 'AAAAAAAA';
 // const SN = 'FB8A8E16';
 // const SN = 'JFKD1101';
@@ -17,8 +17,8 @@ const testData = {
   cmd: 'cache',
   flag: '3617',
   status: generateStatus(),
-  data: [generateData(2, 1),
-    generateData(3, 2)
+  data: [generateData(2, 0),
+    generateData(3, 0)
   ],
   count: '0002',
   temp: 'C3B',
