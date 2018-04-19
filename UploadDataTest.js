@@ -6,9 +6,9 @@ const timeDiff = - 8 * 60 * 60 * 1000;
 const hostname = 'localhost';
 // const hostname = 'https://connectedit.apps.sg1.bosch-iot-cloud.com';
 // const SN = 'AAAAAAAA';
-// const SN = 'FB8A8E16';
+const SN = 'FB8A8E16';
 // const SN = 'JFKD1101';
-const SN = 'PPPPPPPP';
+// const SN = 'PPPPPPPP';
 
 const padLeft = UtilService.padLeft;
 const crcEncrypt = UtilService.crcEncrypt;
