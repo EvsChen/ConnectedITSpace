@@ -29,8 +29,10 @@ app.use(unless('/api/roomdata', session({
   saveUninitialized: true,
 })));
 app.use(express.static(path.join(__dirname, 'public')));
+if (config.mongoExpress) {
+  app.use('/mongo_express', mongoExpress(mongoExpressConfig));  
+}
 app.use('/public/scripts', express.static(path.join(__dirname, 'node_modules')));
-app.use('/mongo_express', mongoExpress(mongoExpressConfig));
 // use JWT auth to secure the api
 // app.use('/api', expressJwt({ secret: config.secret }).unless({
 //   path: ['/api/users/authenticate', '/api/users/register']
